@@ -6,7 +6,7 @@ namespace Day23_AddressBookSystem
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Welcome to the Address Book Program");
+            Console.WriteLine("Welcome to Program of Address Book");
 
             while (true)
             {
@@ -21,8 +21,9 @@ namespace Day23_AddressBookSystem
                         AddressBookDetails.ViewContacts();
                         break;
                     case 3:
-                        // to exit from main method 
+                        // to exit from main method
                         return;
+
                 }
             }
         }
