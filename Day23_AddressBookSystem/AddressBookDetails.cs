@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Day23_AddressBookSystem
 {
-    class UC2AddContacts
+    class AddressBookDetails
     {
         private static List<Person> contacts = new List<Person>();
         public static void AddMember()
