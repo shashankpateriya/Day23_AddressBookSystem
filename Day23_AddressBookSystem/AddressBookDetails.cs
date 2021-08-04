@@ -44,6 +44,30 @@ namespace Day23_AddressBookSystem
             {
                 //object for person class
                 Person person = new Person();
+                while (true)
+                {
+                    Console.Write("Enter First Name: ");
+                    string firstName = Console.ReadLine();
+                    if (contacts.Count > 0)
+                    {
+                        var x = contacts.Find(x => x.firstName.Equals(firstName));
+                        if (x != null)
+                        {
+                            Console.WriteLine("Your name  already exists");
+                        }
+                        else
+                        {
+                            person.firstName = firstName;
+                            break;
+                        }
+                    }
+                    else
+                    {
+                        person.firstName = firstName;
+                        break;
+                    }
+
+                }
 
                 Console.Write("Enter First Name: ");
                 person.firstName = Console.ReadLine();
@@ -279,4 +303,5 @@ namespace Day23_AddressBookSystem
             }
         }
     }
+
 }
