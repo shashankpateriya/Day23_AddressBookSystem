@@ -1,6 +1,7 @@
-﻿using System;
+﻿using Day23_AddressBookSystem;
+using System;
 
-namespace Day23_AddressBookSystem
+namespace AddressBook
 {
     class Program
     {
@@ -13,7 +14,7 @@ namespace Day23_AddressBookSystem
             {
 
                 Console.WriteLine("*********************************************************");
-                Console.WriteLine("1.Add member to Contact list \n2.View Members in Contact List\n3.Edit members Contacts list\n4.Delete members Contacts list\n5.Exit");
+                Console.WriteLine("1.Add member to Contact list \n2.View Members in Contact List\n3.Edit members Contacts list\n4.Delete members Contacts list\n5.Search Details\n6.Exit");
                 Console.WriteLine("Enter an option:");
                 switch (Convert.ToInt32(Console.ReadLine()))
                 {
@@ -30,6 +31,10 @@ namespace Day23_AddressBookSystem
                         abd.DeleteDetails();
                         break;
                     case 5:
+                        abd.SearchDetails();
+                        break;
+                    case 6:
+                        // to exit from main method
                         Console.WriteLine("Exited");
                         return;
 
