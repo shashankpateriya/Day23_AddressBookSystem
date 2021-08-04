@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace AddressBook
+namespace Day23_AddressBookSystem
 {
     class AddressBookDetails
     {
