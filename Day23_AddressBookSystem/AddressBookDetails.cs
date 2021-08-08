@@ -1,19 +1,23 @@
-﻿using Day23_AddressBookSystem;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace Day23_AddressBookSystem
 {
     class AddressBookDetails
     {
-        //list for storing objects for person class
-
         private List<Person> contacts;
-        private static List<Person> searchContacts = new List<Person>();
-        private static List<Person> viewContacts = new List<Person>();
-        //address book dictioanry to store values
+        private int countCity = 0, countState = 0;
+        private List<Person> searchContacts = new List<Person>();
+        private List<Person> viewContacts = new List<Person>();
+        List<Person> SortedList = new List<Person>();
+
         private static Dictionary<string, List<Person>> addressBookDictionary = new Dictionary<string, List<Person>>();
+
+        /// <summary>
+        /// Method yto add a member into addresss book
+        /// </summary>
         public void AddMember()
         {
             string addressBookName;
@@ -326,6 +330,9 @@ namespace Day23_AddressBookSystem
 
         }
 
+        /// <summary>
+        /// Method to search deatils
+        /// </summary>
         public void SearchDetails()
         {
             string personName;
@@ -352,6 +359,9 @@ namespace Day23_AddressBookSystem
             }
 
         }
+        /// <summary>
+        /// method to view deatils
+        /// </summary>
         public void ViewDetailsByStateOrCity()
         {
 
@@ -361,12 +371,12 @@ namespace Day23_AddressBookSystem
                 case 1:
                     Console.WriteLine("Enter the name of city in which you want to view:");
                     string cityName = Console.ReadLine();
-                    ViewByCityName(cityName);
+                    ViewByCityName(cityName, "view");
                     break;
                 case 2:
-                    Console.WriteLine("Enter the state of city in which you want to view:");
+                    Console.WriteLine("Enter the name of state in which you want to view:");
                     string stateName = Console.ReadLine();
-                    ViewByStateName(stateName);
+                    ViewByStateName(stateName, "view");
                     break;
                 default:
                     return;
@@ -375,7 +385,37 @@ namespace Day23_AddressBookSystem
 
         }
 
-        public void ViewByCityName(string cityName)
+        /// <summary>
+        /// Method to count persons
+        /// </summary>
+        public void CountByStateOrCity()
+        {
+
+            Console.WriteLine("1.Count by city name\n2.Count By state name\nEnter your option:");
+            switch (Convert.ToInt32(Console.ReadLine()))
+            {
+                case 1:
+                    Console.WriteLine("Enter the name of city in which you want to count persons:");
+                    string cityName = Console.ReadLine();
+                    ViewByCityName(cityName, "count");
+                    break;
+                case 2:
+                    Console.WriteLine("Enter the name of state in which you want to count persons:");
+                    string stateName = Console.ReadLine();
+                    ViewByStateName(stateName, "count");
+                    break;
+                default:
+                    return;
+
+            }
+
+        }
+        /// <summary>
+        /// Method to view contacts based on city name
+        /// </summary>
+        /// <param name="cityName"></param>
+        /// <param name="check"></param>
+        public void ViewByCityName(string cityName, string check)
         {
             if (addressBookDictionary.Count > 0)
             {
@@ -384,24 +424,39 @@ namespace Day23_AddressBookSystem
                 {
                     viewContacts = dict.Value.FindAll(x => x.state.Equals(cityName));
                 }
-                if (searchContacts.Count > 0)
+                if (check.Equals("view"))
                 {
-                    foreach (var x in searchContacts)
+                    if (viewContacts.Count > 0)
                     {
-                        PrintValues(x);
+                        foreach (var x in viewContacts)
+                        {
+                            PrintValues(x);
+                        }
+
+                    }
+                    else
+                    {
+                        Console.WriteLine("No Details found ");
                     }
                 }
                 else
                 {
-                    Console.WriteLine("No Persons found");
+                    countCity = viewContacts.Count;
+                    Console.WriteLine($"The total persons in {cityName} are : {countCity}");
                 }
+
             }
             else
             {
                 Console.WriteLine("Adress book is empty");
             }
         }
-        public void ViewByStateName(string stateName)
+        /// <summary>
+        /// Method to view contacts based on state name
+        /// </summary>
+        /// <param name="stateName"></param>
+        /// <param name="check"></param>
+        public void ViewByStateName(string stateName, string check)
         {
             if (addressBookDictionary.Count > 0)
             {
@@ -410,16 +465,25 @@ namespace Day23_AddressBookSystem
                 {
                     viewContacts = dict.Value.FindAll(x => x.state.Equals(stateName));
                 }
-                if (searchContacts.Count > 0)
+                if (check.Equals("view"))
                 {
-                    foreach (var x in searchContacts)
+                    if (viewContacts.Count > 0)
                     {
-                        PrintValues(x);
+                        foreach (var x in viewContacts)
+                        {
+                            PrintValues(x);
+                        }
+
+                    }
+                    else
+                    {
+                        Console.WriteLine("No Details found ");
                     }
                 }
                 else
                 {
-                    Console.WriteLine("No Persons found");
+                    countState = viewContacts.Count;
+                    Console.WriteLine($"The total persons in {stateName} are : {countState}");
                 }
             }
             else
@@ -427,7 +491,11 @@ namespace Day23_AddressBookSystem
                 Console.WriteLine("Adress book is empty");
             }
         }
-
+        /// <summary>
+        /// Method to search contacts based on city name
+        /// </summary>
+        /// <param name="cityName"></param>
+        /// <param name="personName"></param>
         public void SearchByCityName(string cityName, string personName)
         {
             if (addressBookDictionary.Count > 0)
@@ -456,6 +524,11 @@ namespace Day23_AddressBookSystem
                 Console.WriteLine("Adress book is empty");
             }
         }
+        /// <summary>
+        /// Method to search contacts based on state name
+        /// </summary>
+        /// <param name="stateName"></param>
+        /// <param name="personName"></param>
         public void SearchByStateName(string stateName, string personName)
         {
             if (addressBookDictionary.Count > 0)
@@ -481,6 +554,31 @@ namespace Day23_AddressBookSystem
             else
             {
                 Console.WriteLine("Adress book is empty");
+            }
+
+        }
+
+
+        public void SortList()
+        {
+            if (addressBookDictionary.Count > 0)
+            {
+
+                //printing the values in address book
+                foreach (KeyValuePair<string, List<Person>> dict in addressBookDictionary)
+                {
+                    //sorting list based on first name
+                    SortedList = dict.Value.OrderBy(x => x.firstName).ToList();
+                    Console.WriteLine($"**********AFTER SORTING {dict.Key}**********");
+                    foreach (var addressBook in SortedList)
+                    {
+                        PrintValues(addressBook);
+                    }
+                }
+            }
+            else
+            {
+                Console.WriteLine("Address Book is Empty");
             }
 
         }
