@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.IO;
 
 namespace Day23_AddressBookSystem
 {
@@ -139,7 +140,6 @@ namespace Day23_AddressBookSystem
                     foreach (var addressBook in dict.Value)
                     {
                         PrintValues(addressBook);
-
                     }
                 }
             }
@@ -161,7 +161,7 @@ namespace Day23_AddressBookSystem
             Console.WriteLine($"Zip Code: {x.zipCode}");
             Console.WriteLine($"Phone Number: {x.phoneNumber}");
             Console.WriteLine($"Email: {x.email}");
-            Console.WriteLine("********|||||||||||********");
+            Console.WriteLine("********=-=-=-=-=********");
         }
 
         //method for editing details
@@ -322,9 +322,6 @@ namespace Day23_AddressBookSystem
             {
                 Console.WriteLine("Adress book is empty");
             }
-
-
-
         }
 
         /// <summary>
@@ -419,26 +416,23 @@ namespace Day23_AddressBookSystem
 
                 foreach (KeyValuePair<string, List<Person>> dict in addressBookDictionary)
                 {
-                    viewContacts = dict.Value.FindAll(x => x.state.Equals(cityName));
-                }
-                if (check.Equals("view"))
-                {
-                    if (viewContacts.Count > 0)
+                    viewContacts = dict.Value.FindAll(x => x.city.Equals(cityName));
+                    countCity += viewContacts.Count;
+                    if (check.Equals("view"))
                     {
-                        foreach (var x in viewContacts)
+                        if (viewContacts.Count > 0)
                         {
-                            PrintValues(x);
+                            foreach (var x in viewContacts)
+                            {
+                                PrintValues(x);
+                            }
                         }
 
                     }
-                    else
-                    {
-                        Console.WriteLine("No Details found ");
-                    }
                 }
-                else
+
+                if (check.Equals("count"))
                 {
-                    countCity = viewContacts.Count;
                     Console.WriteLine($"The total persons in {cityName} are : {countCity}");
                 }
 
@@ -461,25 +455,23 @@ namespace Day23_AddressBookSystem
                 foreach (KeyValuePair<string, List<Person>> dict in addressBookDictionary)
                 {
                     viewContacts = dict.Value.FindAll(x => x.state.Equals(stateName));
-                }
-                if (check.Equals("view"))
-                {
-                    if (viewContacts.Count > 0)
+                    countState += viewContacts.Count;
+                    if (check.Equals("view"))
                     {
-                        foreach (var x in viewContacts)
+                        if (viewContacts.Count > 0)
                         {
-                            PrintValues(x);
+                            foreach (var x in viewContacts)
+                            {
+                                PrintValues(x);
+                            }
+
                         }
 
                     }
-                    else
-                    {
-                        Console.WriteLine("No Details found ");
-                    }
                 }
-                else
+                if (check.Equals("count"))
                 {
-                    countState = viewContacts.Count;
+
                     Console.WriteLine($"The total persons in {stateName} are : {countState}");
                 }
             }
@@ -500,21 +492,22 @@ namespace Day23_AddressBookSystem
 
                 foreach (KeyValuePair<string, List<Person>> dict in addressBookDictionary)
                 {
-                    searchContacts = dict.Value.FindAll(x => x.firstName.Equals(personName) && x.state.Equals(cityName));
-
-
-                }
-                if (searchContacts.Count > 0)
-                {
-                    foreach (var x in searchContacts)
+                    searchContacts = (dict.Value.FindAll(x => x.firstName.Equals(personName) && x.city.Equals(cityName)));
+                    if (searchContacts.Count > 0)
                     {
-                        PrintValues(x);
+                        foreach (var x in searchContacts)
+                        {
+                            PrintValues(x);
+                        }
                     }
+                    else
+                    {
+                        Console.WriteLine($"{personName} not found in address book {dict.Key}");
+                    }
+
+
                 }
-                else
-                {
-                    Console.WriteLine("Person not found");
-                }
+
             }
             else
             {
@@ -534,19 +527,20 @@ namespace Day23_AddressBookSystem
                 foreach (KeyValuePair<string, List<Person>> dict in addressBookDictionary)
                 {
                     searchContacts = dict.Value.FindAll(x => x.firstName.Equals(personName) && x.state.Equals(stateName));
+                    if (searchContacts.Count > 0)
+                    {
+                        foreach (var x in searchContacts)
+                        {
+                            PrintValues(x);
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine($"{personName} not found in address book {dict.Key}");
+                    }
 
                 }
-                if (searchContacts.Count > 0)
-                {
-                    foreach (var x in searchContacts)
-                    {
-                        PrintValues(x);
-                    }
-                }
-                else
-                {
-                    Console.WriteLine("Person not found");
-                }
+
             }
             else
             {
@@ -610,6 +604,86 @@ namespace Day23_AddressBookSystem
             else
             {
                 Console.WriteLine("Address Book is Empty");
+            }
+
+        }
+
+        public void ReadFromFile()
+        {
+            string filePath = @"C:\Users\NARD'S IDEAPAD\source\repos\AddressBook\AddressBook\AddressBooksText.txt";
+
+            try
+            {
+                string[] fileContents = File.ReadAllLines(filePath);
+                var currentAbName = fileContents[0];
+                contacts = new List<Person>();
+                foreach (string i in fileContents.Skip(1))
+                {
+                    if (i.Contains(","))
+                    {
+                        Person person = new Person();
+                        string[] line = i.Split(",");
+                        person.firstName = line[0];
+                        person.lastName = line[1];
+                        person.address = line[2];
+                        person.city = line[3];
+                        person.state = line[4];
+                        person.zipCode = Convert.ToInt32(line[5]);
+                        person.phoneNumber = line[6];
+                        person.email = line[7];
+                        contacts.Add(person);
+                    }
+                    else
+                    {
+                        addressBookDictionary.Add(currentAbName, contacts);
+                        currentAbName = i;
+                        contacts = new List<Person>();
+                    }
+
+
+                }
+                addressBookDictionary.Add(currentAbName, contacts);
+                Console.WriteLine("SuccessFully Added");
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+
+        }
+
+        public void WriteToFile()
+        {
+            string filePath = @"C:\Users\NARD'S IDEAPAD\source\repos\AddressBook\AddressBook\AddressBooksText.txt";
+
+            try
+            {
+                if (addressBookDictionary.Count > 0)
+                {
+                    File.WriteAllText(filePath, string.Empty);
+                    //printing the values in address book
+                    foreach (KeyValuePair<string, List<Person>> dict in addressBookDictionary)
+                    {
+                        File.AppendAllText(filePath, $"{dict.Key}\n");
+                        foreach (var addressBook in dict.Value)
+                        {
+                            string text = $"{addressBook.firstName},{addressBook.lastName},{addressBook.address},{addressBook.city},{addressBook.state},{addressBook.zipCode},{addressBook.phoneNumber},{addressBook.email}\n";
+                            File.AppendAllText(filePath, text);
+                        }
+                    }
+                    Console.WriteLine("successfully stored in file");
+                }
+                else
+                {
+                    Console.WriteLine("Address Book is Empty");
+                }
+
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
             }
 
         }
