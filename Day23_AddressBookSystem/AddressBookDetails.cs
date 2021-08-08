@@ -610,7 +610,7 @@ namespace Day23_AddressBookSystem
 
         public void ReadFromFile()
         {
-            string filePath = @"C:\Users\NARD'S IDEAPAD\source\repos\AddressBook\AddressBook\AddressBooksText.txt";
+            string filePath = @"C:\Users\hp\source\repos\Day23_AddressBookSystemSolution\Day23_AddressBookSystem\AddressBookInfo.cs";
 
             try
             {
@@ -655,7 +655,7 @@ namespace Day23_AddressBookSystem
 
         public void WriteToFile()
         {
-            string filePath = @"C:\Users\NARD'S IDEAPAD\source\repos\AddressBook\AddressBook\AddressBooksText.txt";
+            string filePath = @"C:\Users\hp\source\repos\Day23_AddressBookSystemSolution\Day23_AddressBookSystem\AddressBookInfo.cs";
 
             try
             {
