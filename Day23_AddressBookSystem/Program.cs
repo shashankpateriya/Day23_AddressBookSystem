@@ -36,7 +36,7 @@ namespace Day23_AddressBookSystem
                         abd.CountByStateOrCity();
                         break;
                     case 7:
-                        abd.SortList();
+                        abd.SortEntries();
                         break;
                     case 8:
                         // to exit from main method
